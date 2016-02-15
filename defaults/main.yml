@@ -2,3 +2,15 @@
 
 # Defaults vars file for nginx role
 
+nginx_repository_cache_valid_time: 3600
+nginx_repository_key_url: "http://nginx.org/keys/nginx_signing.key"
+nginx_repository_url: "http://nginx.org/packages/{{ ansible_distribution | lower }}/"
+nginx_repository_file:
+  name: 'nginx.list'
+  owner: 'root'
+  group: 'root'
+  mode: '0644'
+
+nginx_service_state: 'started'
+nginx_service_enabled: True
+
