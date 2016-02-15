@@ -1,0 +1,18 @@
+---
+
+galaxy_info:
+  author: Alexandre Chaussier
+  description: Nginx Ansible role used by Temelio company
+  company: Temelio (http://temelio.com)
+  license: MIT
+  min_ansible_version: 2.0
+  github_branch: master
+  platforms:
+    - name: Ubuntu
+      versions:
+        - trusty
+  galaxy_tags:
+    - web
+    - system
+dependencies: []
+
