@@ -13,7 +13,7 @@
   register: nginx_register_repository_list
 
 
-- name: modify apt-key
+- name: Manage repository key
   become: True
   apt_key:
     url: "{{ nginx_repository_key_url }}"
