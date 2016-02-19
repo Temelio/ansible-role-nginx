@@ -36,6 +36,14 @@ This role contains two tests methods :
 
 ### Default role variables
 
+## Configure servers
+
+Today, management of configuration options is smaller and incomplete, but will grow later.
+
+Example:
+
+    nginx_servers:
+
 ## Dependencies
 
 None

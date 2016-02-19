@@ -29,7 +29,21 @@ describe 'nginx Ansible role' do
               it { should be_enabled }
               it { should be_running }
             end
+
+            DEFAULT_FILES = Array[
+                '/etc/nginx/conf.d/default.conf',
+                '/etc/nginx/conf.d/example_ssl.conf'
+            ]
+            DEFAULT_FILES.each do |current_file|
+                describe file(current_file) do
+                    it { should_not exist }
+                end
+            end
         end
     end
 end
 
+describe iptables() do
+    it { should have_rule '-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT' }
+    it { should have_rule '-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT' }
+end

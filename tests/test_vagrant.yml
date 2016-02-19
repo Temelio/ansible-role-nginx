@@ -10,4 +10,21 @@
     - include: ./test_common.yml
   vars:
     role_name: "{{ lookup('env','ANSIBLE_ROLE_NAME') }}"
+    nginx_servers:
+      - name: "{{ ansible_fqdn }}"
+        is_enabled: False
+        listen:
+          - 80
+        locations:
+          - target: '/foo'
+            options:
+              - 'try_files $uri =404'
+              - 'root /var/www/foo'
+          - target: '/bar'
+            options:
+              - 'try_files $uri =404'
+              - 'root /var/www/bar'
+        root: '/var/www/foo'
+        server_name: 'localhost'
+        use_ssl: False
 

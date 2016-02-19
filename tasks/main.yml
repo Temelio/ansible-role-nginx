@@ -23,7 +23,6 @@
     - nginx
     - install
 
-
 - name: Enable service
   become: True
   service:
@@ -33,4 +32,23 @@
   tags:
     - nginx
     - install
+
+- name: Manage SSL certificates and key
+  include: "{{ role_path }}/tasks/certificate_management.yml"
+  tags:
+    - nginx
+    - config
+
+- name: Manage configuration
+  include: "{{ role_path }}/tasks/configure.yml"
+  tags:
+    - nginx
+    - config
+
+- name: Include tasks about firewall configuration with ferm
+  include: "{{ role_path }}/tasks/manage_firewall_rules_with_ferm.yml"
+  when: nginx_firewall_managed_with_ferm
+  tags:
+    - config
+    - nginx
 

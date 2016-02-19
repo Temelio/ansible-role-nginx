@@ -1,0 +1,26 @@
+# {{ ansible_managed }}
+
+user {{ nginx_user }};
+worker_processes {{ nginx_worker_processes }};
+
+error_log {{ nginx_error_log_path }} {{ nginx_error_log_level }};
+pid {{ nginx_pid_path }};
+
+events {
+{% for event_option in nginx_events_options %}
+    {{ event_option }}
+{% endfor %}
+}
+
+http {
+{% if nginx_http_log_format_string %}
+    log_format {{ nginx_http_log_format_name }} '{{ nginx_http_log_format_string }}';
+{% endif %}
+{% for http_option in nginx_http_options %}
+    {{ http_option }}
+{% endfor %}
+
+    include {{ nginx_site_enabled_path }}/*.conf;
+
+}
+
