@@ -9,5 +9,6 @@
   post_tasks:
     - include: ./test_common.yml
   vars:
+    nginx_ssl_self_signed_cn: "foobar.bar"
     role_name: "{{ lookup('env','TRAVIS_REPO_SLUG') }}"
 

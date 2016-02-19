@@ -54,6 +54,7 @@ nginx_ssl_key_files:
     owner: 'root'
     group: 'root'
     mode: '0600'
+nginx_ssl_self_signed_cn: "{{ ansible_fqdn }}"
 
 
 nginx_user: 'nginx'
