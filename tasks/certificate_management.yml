@@ -10,7 +10,7 @@
     mode: "{{ item.mode }}"
   notify: restart nginx
   with_items: "{{ nginx_ssl_certificate_files }}"
-  when: "{{ item.content }}"
+  when: "{{ item.content != '' }}"
 
 - name: Install key file
   become: True
@@ -22,7 +22,7 @@
     mode: "{{ item.mode }}"
   notify: restart nginx
   with_items: "{{ nginx_ssl_key_files }}"
-  when: "{{ item.content }}"
+  when: "{{ item.content != '' }}"
 
 - name: Create self signed certificate and private key
   become: True
