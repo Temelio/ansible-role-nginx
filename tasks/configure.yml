@@ -5,6 +5,7 @@
   file:
     path: "{{ item }}"
     state: 'absent'
+  notify: restart nginx
   with_items: "{{ nginx_default_config_files }}"
   when: "{{ nginx_delete_default_config_files }}"
 
