@@ -133,7 +133,8 @@ Example:
               - 'try_files $uri =404'
               - 'root /var/www/bar'
         root: '/var/www/foo'
-        server_name: 'localhost'
+        server_name:
+          - 'localhost'
         use_ssl: False
 
 ## Dependencies

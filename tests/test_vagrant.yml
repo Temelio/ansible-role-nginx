@@ -25,6 +25,8 @@
               - 'try_files $uri =404'
               - 'root /var/www/bar'
         root: '/var/www/foo'
-        server_name: 'localhost'
+        server_name:
+          - 'localhost'
+        additional_rules: []
         use_ssl: False
 

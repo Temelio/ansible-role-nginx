@@ -17,8 +17,8 @@ server {
 {% if item.root is defined and item.root != '' %}
     root {{ item.root }};
 {% endif %}
-{% if item.server_name is defined and item.server_name != '' %}
-    server_name {{ item.server_name }};
+{% if item.server_name is defined and item.server_name %}
+    server_name {{ item.server_name | join(' ') }};
 {% endif %}
 {% if item.index is defined and item.index != '' %}
     server_name {{ item.index }};

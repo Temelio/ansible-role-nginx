@@ -11,4 +11,23 @@
   vars:
     nginx_ssl_self_signed_cn: "foobar.bar"
     role_name: "{{ lookup('env','TRAVIS_REPO_SLUG') }}"
+    nginx_servers:
+      - name: "{{ ansible_fqdn }}"
+        is_enabled: False
+        listen:
+          - 80
+        locations:
+          - target: '/foo'
+            options:
+              - 'try_files $uri =404'
+              - 'root /var/www/foo'
+          - target: '/bar'
+            options:
+              - 'try_files $uri =404'
+              - 'root /var/www/bar'
+        root: '/var/www/foo'
+        server_name:
+          - 'localhost'
+        additional_rules: []
+        use_ssl: False
 
