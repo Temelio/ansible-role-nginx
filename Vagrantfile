@@ -48,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                         || (sudo apt-get update \
                             && sudo apt-get install python-pip curl git -y \
                             && sudo pip install paramiko PyYAML Jinja2 \
-                                                httplib2 six pytest ansible
+                                                httplib2 six pytest ansible \
                                                 ansible-lint)"
         end
       end
@@ -65,14 +65,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # Needed with 2.0 home path change
       vm_config.vm.provision "trigger" do |trigger|
         trigger.fire do
-          ENV['ANSIBLE_ROLES_PATH'] = '../'
+          ENV['ANSIBLE_ROLES_PATH'] = '../:../roles/'
           ENV['ANSIBLE_ROLE_NAME'] = File.basename(Dir.getwd)
         end
       end
 
+      # Install role requirements (need vagrant-triggers plugin installed !)
+      config.trigger.before [:up, :provision] do
+        info "Install or update role requirements"
+        run "ansible-galaxy install \
+              -r ./tests/requirements.yml \
+              -p ../roles/ \
+              --force"
+      end
+
       # Run Ansible linter
       vm_config.vm.provision "shell" do |sh|
-        sh.inline = "cd /vagrant && ansible-list tasks/main.yml"
+        sh.inline = "cd /vagrant && ansible-lint tasks/main.yml"
         sh.privileged = false
       end
 

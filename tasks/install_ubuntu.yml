@@ -1,0 +1,36 @@
+---
+
+# Specific install tasks for Ubuntu distribution
+
+- name: Install repository
+  become: True
+  template:
+    src: "{{ role_path }}/templates/repositories/nginx_ubuntu.list.j2"
+    dest: "/etc/apt/sources.list.d/{{ nginx_repository_file.name }}"
+    owner: "{{ nginx_repository_file.owner }}"
+    group: "{{ nginx_repository_file.group }}"
+    mode: "{{ nginx_repository_file.mode }}"
+  register: nginx_register_repository_list
+
+
+- name: Manage repository key
+  become: True
+  apt_key:
+    url: "{{ nginx_repository_key_url }}"
+  register: nginx_register_repository_key
+
+
+- name: Update apt cache if repository changed
+  become: True
+  apt:
+    update_cache: True
+  when: "nginx_register_repository_list.changed \
+        or nginx_register_repository_key.changed"
+
+
+- name: Update apt cache if repository not changed
+  become: True
+  apt:
+    update_cache: True
+    cache_valid_time: "{{ nginx_repository_cache_valid_time }}"
+

@@ -2,3 +2,53 @@
 
 # Main tasks file for nginx role
 
+- name: Load distribution variables
+  include_vars: "{{ role_path }}/vars/{{ ansible_distribution | lower }}.yml"
+  tags:
+    - nginx
+    - install
+
+- name: Manage distribution specific installation tasks
+  include: "{{ role_path }}/tasks/install_{{ ansible_distribution|lower }}.yml"
+  tags:
+    - nginx
+    - install
+
+- name: Install packages
+  become: True
+  package:
+    name: "{{ item }}"
+  with_items: "{{ nginx_packages }}"
+  tags:
+    - nginx
+    - install
+
+- name: Enable service
+  become: True
+  service:
+    name: "{{ nginx_service_name }}"
+    state: "{{ nginx_service_state }}"
+    enabled: "{{ nginx_service_enabled }}"
+  tags:
+    - nginx
+    - install
+
+- name: Manage SSL certificates and key
+  include: "{{ role_path }}/tasks/certificate_management.yml"
+  tags:
+    - nginx
+    - config
+
+- name: Manage configuration
+  include: "{{ role_path }}/tasks/configure.yml"
+  tags:
+    - nginx
+    - config
+
+- name: Include tasks about firewall configuration with ferm
+  include: "{{ role_path }}/tasks/manage_firewall_rules_with_ferm.yml"
+  when: nginx_firewall_managed_with_ferm
+  tags:
+    - config
+    - nginx
+

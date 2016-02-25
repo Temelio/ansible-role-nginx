@@ -2,3 +2,16 @@
 
 # Handlers main file for nginx role
 
+- name: restart nginx
+  become: True
+  service:
+    name: "{{ nginx_service_name }}"
+    state: 'restarted'
+
+
+- name: reload nginx
+  become: True
+  service:
+    name: "{{ nginx_service_name }}"
+    state: 'reloaded'
+

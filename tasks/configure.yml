@@ -1,0 +1,58 @@
+---
+
+- name: Delete default configuration files
+  become: True
+  file:
+    path: "{{ item }}"
+    state: 'absent'
+  notify: restart nginx
+  with_items: "{{ nginx_default_config_files }}"
+  when: "{{ nginx_delete_default_config_files }}"
+
+- name: Create server configuration folders
+  become: True
+  file:
+    path: "{{ item }}"
+    owner: "{{ nginx_config_dir_owner }}"
+    group: "{{ nginx_config_dir_group }}"
+    mode: "{{ nginx_config_dir_mode }}"
+    state: 'directory'
+  with_items:
+    - "{{ nginx_site_available_path }}"
+    - "{{ nginx_site_enabled_path }}"
+
+- name: Manage main configuration file
+  become: True
+  template:
+    src: "{{ role_path }}/templates/nginx.conf.j2"
+    dest: "{{ nginx_main_config_file_path }}"
+    owner: "{{ nginx_config_files_owner }}"
+    group: "{{ nginx_config_files_group }}"
+    mode: "{{ nginx_config_files_mode }}"
+  notify: restart nginx
+
+- name: Manage servers configuration
+  become: True
+  template:
+    src: "{{ role_path }}/templates/server.conf.j2"
+    dest: "{{ nginx_site_available_path }}/{{ item.name }}.conf"
+    owner: "{{ nginx_config_files_owner }}"
+    group: "{{ nginx_config_files_group }}"
+    mode: "{{ nginx_config_files_mode }}"
+  notify: restart nginx
+  with_items: "{{ nginx_servers }}"
+
+- name: Manage servers activation
+  become: True
+  file:
+    src: "{{ nginx_site_available_path }}/{{ item.name }}.conf"
+    dest: "{{ nginx_site_enabled_path }}/{{ item.name }}.conf"
+    state: "{{ item.is_enabled | ternary('link', 'absent') }}"
+  notify: restart nginx
+  with_items: "{{ nginx_servers }}"
+
+- name: Check if configuration is valid
+  become: True
+  command: 'nginx -t'
+  changed_when: False
+

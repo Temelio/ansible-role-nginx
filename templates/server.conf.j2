@@ -1,0 +1,36 @@
+# {{ ansible_managed }}
+
+server {
+{% for listen_entry in item.listen %}
+    listen {{ listen_entry }};
+{% endfor %}
+
+{% if item.use_ssl is defined and item.use_ssl == True %}
+    ssl_certificate {{ item.ssl.certificate }};
+    ssl_certificate_key {{ item.ssl.certificate_key }};
+    ssl_session_timeout {{ item.ssl.session_timeout }};
+    ssl_protocols {{ item.ssl.protocols | join(' ') }};
+    ssl_ciphers {{ item.ssl.ciphers | join(':') }};
+    ssl_prefer_server_ciphers {{ item.ssl.prefer_server_cipher }};
+{% endif %}
+
+{% if item.root is defined and item.root != '' %}
+    root {{ item.root }};
+{% endif %}
+{% if item.server_name is defined and item.server_name %}
+    server_name {{ item.server_name | join(' ') }};
+{% endif %}
+{% if item.index is defined and item.index != '' %}
+    index {{ item.index }};
+{% endif %}
+
+{% for rule in item.additional_rules %}
+    {{ rule }}
+{% endfor %}
+
+{% for location in item.locations %}
+    {% include 'templates/server_location.j2' %}
+{% endfor %}
+
+}
+

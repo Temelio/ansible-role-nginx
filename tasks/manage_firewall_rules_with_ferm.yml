@@ -1,0 +1,40 @@
+---
+
+# Add firewall rules managed by ferm
+
+- name: Create ferm input rules file
+  become: True
+  template:
+    src: "{{ role_path }}/templates/ferm_rules.conf.j2"
+    dest: "{{ nginx_ferm_input_rules_file }}"
+    owner: "{{ nginx_ferm_files_owner }}"
+    group: "{{ nginx_ferm_files_group }}"
+    mode: "{{ nginx_ferm_files_mode }}"
+  register: nginx_ferm_rules_change
+
+- name: Check ferm rules
+  become: True
+  command: "ferm -n {{ nginx_ferm_main_config_file }}"
+  changed_when: False
+  ignore_errors: True
+  register: nginx_ferm_check_configuration
+
+- name: Remove errored ferm config file
+  become: True
+  file:
+    dest: "{{ nginx_ferm_input_rules_file }}"
+    state: 'absent'
+  when: nginx_ferm_check_configuration | failed
+
+- name: Exit due to ferm configuration error
+  fail:
+    msg: 'Ferm configuration error, fix it before continue !'
+  when: nginx_ferm_check_configuration | failed
+
+- name: Update ferm rules
+  become: True
+  service:
+    name: "{{ nginx_ferm_service_name }}"
+    state: 'restarted'
+  when: nginx_ferm_rules_change.changed
+
