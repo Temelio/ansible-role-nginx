@@ -11,8 +11,8 @@
   vars:
     role_name: "{{ lookup('env','ANSIBLE_ROLE_NAME') }}"
     nginx_servers:
-      - name: "{{ ansible_fqdn }}"
-        is_enabled: False
+      - name: 'foobar'
+        is_enabled: True
         listen:
           - 80
         locations:
@@ -25,6 +25,7 @@
               - 'try_files $uri =404'
               - 'root /var/www/bar'
         root: '/var/www/foo'
+        index: 'index.html'
         server_name:
           - 'localhost'
         additional_rules: []

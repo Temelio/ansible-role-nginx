@@ -21,7 +21,7 @@ server {
     server_name {{ item.server_name | join(' ') }};
 {% endif %}
 {% if item.index is defined and item.index != '' %}
-    server_name {{ item.index }};
+    index {{ item.index }};
 {% endif %}
 
 {% for rule in item.additional_rules %}
