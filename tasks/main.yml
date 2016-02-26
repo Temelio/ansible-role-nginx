@@ -23,16 +23,6 @@
     - nginx
     - install
 
-- name: Enable service
-  become: True
-  service:
-    name: "{{ nginx_service_name }}"
-    state: "{{ nginx_service_state }}"
-    enabled: "{{ nginx_service_enabled }}"
-  tags:
-    - nginx
-    - install
-
 - name: Manage SSL certificates and key
   include: "{{ role_path }}/tasks/certificate_management.yml"
   tags:
@@ -51,4 +41,14 @@
   tags:
     - config
     - nginx
+
+- name: Enable service
+  become: True
+  service:
+    name: "{{ nginx_service_name }}"
+    state: "{{ nginx_service_state }}"
+    enabled: "{{ nginx_service_enabled }}"
+  tags:
+    - nginx
+    - install
 
