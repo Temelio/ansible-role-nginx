@@ -20,7 +20,7 @@ http {
     {{ http_option }}
 {% endfor %}
 
-    include {{ nginx_site_enabled_path }}/*.conf;
+    include {{ nginx_sites_enabled_path }}/*.conf;
 
 }
 

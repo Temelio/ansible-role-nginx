@@ -18,8 +18,8 @@
     mode: "{{ nginx_config_dir_mode }}"
     state: 'directory'
   with_items:
-    - "{{ nginx_site_available_path }}"
-    - "{{ nginx_site_enabled_path }}"
+    - "{{ nginx_sites_available_path }}"
+    - "{{ nginx_sites_enabled_path }}"
 
 - name: Manage main configuration file
   become: True
@@ -35,7 +35,7 @@
   become: True
   template:
     src: "{{ role_path }}/templates/server.conf.j2"
-    dest: "{{ nginx_site_available_path }}/{{ item.name }}.conf"
+    dest: "{{ nginx_sites_available_path }}/{{ item.name }}.conf"
     owner: "{{ nginx_config_files_owner }}"
     group: "{{ nginx_config_files_group }}"
     mode: "{{ nginx_config_files_mode }}"
@@ -45,8 +45,8 @@
 - name: Manage servers activation
   become: True
   file:
-    src: "{{ nginx_site_available_path }}/{{ item.name }}.conf"
-    dest: "{{ nginx_site_enabled_path }}/{{ item.name }}.conf"
+    src: "{{ nginx_sites_available_path }}/{{ item.name }}.conf"
+    dest: "{{ nginx_sites_enabled_path }}/{{ item.name }}.conf"
     state: "{{ item.is_enabled | ternary('link', 'absent') }}"
   notify: restart nginx
   with_items: "{{ nginx_servers }}"
