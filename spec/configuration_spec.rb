@@ -4,7 +4,7 @@ if ENV['TRAVIS']
     set :backend, :exec
 end
 
-describe file('/etc/nginx/site-available/foobar.conf') do
+describe file('/etc/nginx/sites-available/foobar.conf') do
 
     it { should exist }
     it { should be_file }
