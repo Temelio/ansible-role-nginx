@@ -47,6 +47,10 @@ This role contains two tests methods :
     nginx_service_state: 'started'
     nginx_service_enabled: True
 
+    nginx_add_default_server: True
+    nginx_default_server_options:
+      - 'return 404;'
+
     # Firewall configuration
     #-----------------------
     nginx_firewall_managed_with_ferm: True
