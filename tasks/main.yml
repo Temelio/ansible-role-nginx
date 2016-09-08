@@ -35,13 +35,6 @@
     - nginx
     - config
 
-- name: Include tasks about firewall configuration with ferm
-  include: "{{ role_path }}/tasks/manage_firewall_rules_with_ferm.yml"
-  when: nginx_firewall_managed_with_ferm
-  tags:
-    - config
-    - nginx
-
 - name: Enable service
   become: True
   service:

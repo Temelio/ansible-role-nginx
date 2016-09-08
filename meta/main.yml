@@ -14,7 +14,4 @@ galaxy_info:
   galaxy_tags:
     - web
     - system
-dependencies:
-  - role: Temelio.ferm
-    when: nginx_firewall_managed_with_ferm
-
+dependencies: []
