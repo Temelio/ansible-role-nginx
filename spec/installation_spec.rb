@@ -42,8 +42,3 @@ describe 'nginx Ansible role' do
         end
     end
 end
-
-describe iptables() do
-    it { should have_rule '-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT' }
-    it { should have_rule '-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT' }
-end
