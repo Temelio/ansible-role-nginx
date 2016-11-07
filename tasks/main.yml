@@ -18,6 +18,7 @@
   become: True
   package:
     name: "{{ item }}"
+    state: "{{ nginx_packages_state }}"
   with_items: "{{ nginx_packages }}"
   tags:
     - nginx

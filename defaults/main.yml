@@ -11,6 +11,8 @@ nginx_repository_file:
   group: 'root'
   mode: '0644'
 
+nginx_packages_state: 'latest'
+
 nginx_service_state: 'started'
 nginx_service_enabled: True
 
