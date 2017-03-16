@@ -1,7 +1,9 @@
 # {{ ansible_managed }}
 
-user {{ nginx_user }};
-worker_processes {{ nginx_worker_processes }};
+
+{% for main_option in nginx_main_options %}
+{{ main_option }}
+{% endfor %}
 
 error_log {{ nginx_error_log_path }} {{ nginx_error_log_level }};
 pid {{ nginx_pid_path }};

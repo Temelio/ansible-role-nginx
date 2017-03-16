@@ -81,10 +81,13 @@ This role contains two tests methods :
     nginx_ssl_self_signed_cn: "{{ ansible_fqdn }}"
 
     nginx_user: 'nginx'
-    nginx_worker_processes: 1
     nginx_error_log_path: '/var/log/nginx/error.log'
     nginx_error_log_level: 'warn'
     nginx_pid_path: '/run/nginx.pid'
+
+    nginx_main_options:
+      - "user {{ nginx_user }};"
+      - 'worker_processes 1;'
 
     nginx_events_options:
       - 'worker_connections 1024;'
