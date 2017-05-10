@@ -25,7 +25,11 @@
         or nginx_register_repository_key.changed"
 
 
-- name: 'INSTALL | APT | Update apt cache if repository not changed'
+- name: 'INSTALL | APT | Install packages'
   apt:
+    name: "{{ item }}"
     update_cache: True
     cache_valid_time: "{{ nginx_repository_cache_valid_time }}"
+    state: "{{ nginx_packages_state }}"
+  notify: 'HANDLER | Restart Nginx'
+  with_items: "{{ nginx_packages }}"

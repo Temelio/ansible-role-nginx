@@ -17,18 +17,6 @@
     - 'role::nginx::install'
 
 
-- name: 'INSTALL | Install packages'
-  become: True
-  package:
-    name: "{{ item }}"
-    state: "{{ nginx_packages_state }}"
-  with_items: "{{ nginx_packages }}"
-  notify: 'HANDLER | Restart Nginx'
-  tags:
-    - 'role::nginx'
-    - 'role::nginx::install'
-
-
 - name: 'CONFIG | Manage configuration'
   become: True
   include: "{{ role_path }}/tasks/configure.yml"
