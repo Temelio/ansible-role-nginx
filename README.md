@@ -79,21 +79,6 @@ nginx_main_config_file_path: '/etc/nginx/nginx.conf'
 nginx_sites_available_path: '/etc/nginx/sites-available'
 nginx_sites_enabled_path: '/etc/nginx/sites-enabled'
 
-nginx_ssl_certificate_files:
-  - path: "{{ ansible_fqdn }}"
-    content: ''
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
-nginx_ssl_key_files:
-  - path: "{{ ansible_fqdn }}"
-    content: ''
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
-nginx_ssl_self_signed_cn: "{{ ansible_fqdn }}"
-
-
 nginx_user: 'nginx'
 nginx_error_log_path: '/var/log/nginx/error.log'
 nginx_error_log_level: 'warn'

@@ -24,11 +24,6 @@
     - nginx
     - install
 
-- name: Manage SSL certificates and key
-  include: "{{ role_path }}/tasks/certificate_management.yml"
-  tags:
-    - nginx
-    - config
 
 - name: Manage configuration
   include: "{{ role_path }}/tasks/configure.yml"
