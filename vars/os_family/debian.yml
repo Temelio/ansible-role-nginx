@@ -1,0 +1,11 @@
+---
+
+# Debian family variables
+#------------------------------------------------------------------------------
+
+# Packages
+nginx_packages:
+  - 'nginx'
+
+# Services
+nginx_service_name: 'nginx'
