@@ -8,35 +8,42 @@
     - 'role::nginx'
     - 'role::nginx::init'
 
-- name: Manage distribution specific installation tasks
-  include: "{{ role_path }}/tasks/install_{{ ansible_distribution|lower }}.yml"
-  tags:
-    - nginx
-    - install
 
-- name: Install packages
+- name: 'INSTALL | Manage OS family specific installation tasks'
+  become: True
+  include: "{{ role_path }}/tasks/install/{{ ansible_os_family | lower }}_family.yml"
+  tags:
+    - 'role::nginx'
+    - 'role::nginx::install'
+
+
+- name: 'INSTALL | Install packages'
   become: True
   package:
     name: "{{ item }}"
     state: "{{ nginx_packages_state }}"
   with_items: "{{ nginx_packages }}"
+  notify: 'HANDLER | Restart Nginx'
   tags:
-    - nginx
-    - install
+    - 'role::nginx'
+    - 'role::nginx::install'
 
 
-- name: Manage configuration
+- name: 'CONFIG | Manage configuration'
+  become: True
   include: "{{ role_path }}/tasks/configure.yml"
   tags:
-    - nginx
-    - config
+    - 'role::nginx'
+    - 'role::nginx::config'
 
-- name: Enable service
+
+- name: 'INSTALL | Enable services'
   become: True
   service:
     name: "{{ nginx_service_name }}"
     state: "{{ nginx_service_state }}"
     enabled: "{{ nginx_service_enabled }}"
   tags:
-    - nginx
-    - install
+    - 'role::nginx'
+    - 'role::nginx::config'
+    - 'role::nginx::install'
