@@ -22,13 +22,13 @@ def test_site_configuration(host):
         u'    server_name localhost;',
         u'    index index.html;',
         u'    location /foo {',
-        u'    try_files $uri =404;',
-        u'    root /var/www/foo;',
-        u'}',
+        u'        try_files $uri =404;',
+        u'        root /var/www/foo;',
+        u'    }',
         u'    location /bar {',
-        u'    try_files $uri =404;',
-        u'    root /var/www/bar;',
-        u'}',
+        u'        try_files $uri =404;',
+        u'        root /var/www/bar;',
+        u'    }',
         u'}'
     ]
 

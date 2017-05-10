@@ -1,9 +1,11 @@
 # {{ ansible_managed }}
 
 server {
+{% if item.listen is defined %}
 {% for listen_entry in item.listen %}
     listen {{ listen_entry }};
 {% endfor %}
+{% endif %}
 
 {% if item.use_ssl is defined and item.use_ssl == True %}
     ssl_certificate {{ item.ssl.certificate }};
@@ -24,13 +26,22 @@ server {
     index {{ item.index }};
 {% endif %}
 
+{% if item.additional_rules is defined %}
 {% for rule in item.additional_rules %}
     {{ rule }}
 {% endfor %}
+{% endif %}
 
+{% if item.locations is defined %}
 {% for location in item.locations %}
-    {% include 'templates/server_location.j2' %}
+    location {{ location.target }} {
+{% if location.options is defined %}
+{% for location_option in location.options %}
+        {{ location_option }};
 {% endfor %}
-
+{% endif %}
+    }
+{% endfor %}
+{% endif %}
 }
 
