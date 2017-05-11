@@ -2,34 +2,27 @@
 
 # Specific install tasks for Debian family
 
-- name: 'INSTALL | APT | Install repository'
-  template:
-    src: "{{ role_path }}/templates/repositories/nginx_ubuntu.list.j2"
-    dest: "/etc/apt/sources.list.d/{{ nginx_repository_file.name }}"
-    owner: "{{ nginx_repository_file.owner }}"
-    group: "{{ nginx_repository_file.group }}"
-    mode: "{{ nginx_repository_file.mode }}"
-  register: 'nginx_register_repository_list'
-
-
 - name: 'INSTALL | APT | Manage repository key'
   apt_key:
-    url: "{{ nginx_repository_key_url }}"
-  register: 'nginx_register_repository_key'
+    url: "{{ item.url }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ nginx_repositories_keys }}"
 
 
-- name: 'INSTALL | APT | Update apt cache if repository changed'
-  apt:
+- name: 'INSTALL | APT | Install repository'
+  apt_repository:
+    repo: "{{ item.repo }}"
     update_cache: True
-  when: "nginx_register_repository_list.changed \
-        or nginx_register_repository_key.changed"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ nginx_repositories }}"
 
 
 - name: 'INSTALL | APT | Install packages'
   apt:
-    name: "{{ item }}"
+    name: "{{ item.name }}"
     update_cache: True
     cache_valid_time: "{{ nginx_repository_cache_valid_time }}"
-    state: "{{ nginx_packages_state }}"
+    state: "{{ item.state | default('present') }}"
+    version: "{{ item.version | default(omit) }}"
   notify: 'HANDLER | Restart Nginx'
   with_items: "{{ nginx_packages }}"

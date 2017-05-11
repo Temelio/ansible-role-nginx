@@ -26,17 +26,18 @@ def test_repository_file(host):
     Test about repository file poroperties
     """
 
-    repo_files = []
+    repo_file = ''
 
-    if host.system_info.distribution in ('debian', 'ubuntu'):
-        repo_files = ['/etc/apt/sources.list.d/nginx.list']
+    if host.system_info.distribution == 'debian':
+        repo_file = '/etc/apt/sources.list.d/nginx_org_packages_debian.list'
+    elif host.system_info.distribution == 'ubuntu':
+        repo_file = '/etc/apt/sources.list.d/nginx_org_packages_ubuntu.list'
 
-    for repo_file in repo_files:
-        assert host.file(repo_file).exists
-        assert host.file(repo_file).is_file
-        assert host.file(repo_file).user == 'root'
-        assert host.file(repo_file).group == 'root'
-        assert host.file(repo_file).mode == 0o644
+    assert host.file(repo_file).exists
+    assert host.file(repo_file).is_file
+    assert host.file(repo_file).user == 'root'
+    assert host.file(repo_file).group == 'root'
+    assert host.file(repo_file).mode == 0o644
 
 
 def test_default_files_removed(host):
