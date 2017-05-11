@@ -1,58 +1,56 @@
 ---
 
-- name: Delete default configuration files
-  become: True
+- name: 'Delete default configuration files'
   file:
     path: "{{ item }}"
     state: 'absent'
-  notify: restart nginx
-  with_items: "{{ nginx_default_config_files }}"
-  when: "{{ nginx_delete_default_config_files }}"
+  notify: 'HANDLER | Restart Nginx'
+  with_items: "{{ nginx_config_paths.files.default }}"
+  when: "nginx_delete_default_config_files"
 
-- name: Create server configuration folders
-  become: True
+
+- name: 'Create server configuration folders'
   file:
     path: "{{ item }}"
-    owner: "{{ nginx_config_dir_owner }}"
-    group: "{{ nginx_config_dir_group }}"
-    mode: "{{ nginx_config_dir_mode }}"
+    owner: "{{ nginx_config_permissions.folders.owner }}"
+    group: "{{ nginx_config_permissions.folders.group }}"
+    mode: "{{ nginx_config_permissions.folders.mode }}"
     state: 'directory'
   with_items:
-    - "{{ nginx_sites_available_path }}"
-    - "{{ nginx_sites_enabled_path }}"
+    - "{{ nginx_config_paths.folders.sites_available }}"
+    - "{{ nginx_config_paths.folders.sites_enabled }}"
 
-- name: Manage main configuration file
-  become: True
+
+- name: 'Manage main configuration file'
   template:
     src: "{{ role_path }}/templates/nginx.conf.j2"
-    dest: "{{ nginx_main_config_file_path }}"
-    owner: "{{ nginx_config_files_owner }}"
-    group: "{{ nginx_config_files_group }}"
-    mode: "{{ nginx_config_files_mode }}"
-  notify: restart nginx
+    dest: "{{ nginx_config_paths.files.main }}"
+    owner: "{{ nginx_config_permissions.files.owner }}"
+    group: "{{ nginx_config_permissions.files.group }}"
+    mode: "{{ nginx_config_permissions.files.mode }}"
+  notify: 'HANDLER | Restart Nginx'
 
-- name: Manage servers configuration
-  become: True
+
+- name: 'Manage servers configuration'
   template:
     src: "{{ role_path }}/templates/server.conf.j2"
-    dest: "{{ nginx_sites_available_path }}/{{ item.name }}.conf"
-    owner: "{{ nginx_config_files_owner }}"
-    group: "{{ nginx_config_files_group }}"
-    mode: "{{ nginx_config_files_mode }}"
-  notify: restart nginx
+    dest: "{{ nginx_config_paths.folders.sites_available }}/{{ item.name }}.conf"
+    owner: "{{ nginx_config_permissions.files.owner }}"
+    group: "{{ nginx_config_permissions.files.group }}"
+    mode: "{{ nginx_config_permissions.files.mode }}"
+  notify: 'HANDLER | Restart Nginx'
   with_items: "{{ nginx_servers }}"
 
-- name: Manage servers activation
-  become: True
+
+- name: 'Manage servers activation'
   file:
-    src: "{{ nginx_sites_available_path }}/{{ item.name }}.conf"
-    dest: "{{ nginx_sites_enabled_path }}/{{ item.name }}.conf"
+    src: "{{ nginx_config_paths.folders.sites_available }}/{{ item.name }}.conf"
+    dest: "{{ nginx_config_paths.folders.sites_enabled }}/{{ item.name }}.conf"
     state: "{{ item.is_enabled | ternary('link', 'absent') }}"
-  notify: restart nginx
+  notify: 'HANDLER | Restart Nginx'
   with_items: "{{ nginx_servers }}"
 
-- name: Check if configuration is valid
-  become: True
+
+- name: 'Check if configuration is valid'
   command: 'nginx -t'
   changed_when: False
-
