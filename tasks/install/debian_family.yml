@@ -1,0 +1,28 @@
+---
+
+# Specific install tasks for Debian family
+
+- name: 'INSTALL | APT | Manage repository key'
+  apt_key:
+    url: "{{ item.url }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ nginx_repositories_keys }}"
+
+
+- name: 'INSTALL | APT | Install repository'
+  apt_repository:
+    repo: "{{ item.repo }}"
+    update_cache: True
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ nginx_repositories }}"
+
+
+- name: 'INSTALL | APT | Install packages'
+  apt:
+    name: "{{ item.name }}"
+    update_cache: True
+    cache_valid_time: "{{ nginx_repository_cache_valid_time }}"
+    state: "{{ item.state | default('present') }}"
+    version: "{{ item.version | default(omit) }}"
+  notify: 'HANDLER | Restart Nginx'
+  with_items: "{{ nginx_packages }}"

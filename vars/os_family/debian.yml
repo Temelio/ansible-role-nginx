@@ -1,0 +1,20 @@
+---
+
+# Debian family variables
+#------------------------------------------------------------------------------
+
+# Repositories management
+_nginx_repositories:
+  - repo: "deb http://nginx.org/packages/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} nginx"
+  - repo: "deb-src http://nginx.org/packages/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} nginx"
+_nginx_repositories_keys:
+  - url: "http://nginx.org/keys/nginx_signing.key"
+_nginx_repository_cache_valid_time: 3600
+
+# Packages management
+_nginx_packages:
+  - name: 'nginx'
+    state: 'latest'
+
+# Services
+nginx_service_name: 'nginx'
