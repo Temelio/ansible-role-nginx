@@ -37,7 +37,7 @@ http {
 {% endif %}
     }
 {% endif %}
-    include {{ nginx_sites_enabled_path }}/*.conf;
+    include {{ nginx_config_paths.folders.sites_enabled }}/*.conf;
 
 }
 

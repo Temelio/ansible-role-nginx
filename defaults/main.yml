@@ -15,24 +15,38 @@ nginx_repositories: "{{ _nginx_repositories }}"
 nginx_service_state: 'started'
 nginx_service_enabled: True
 
+# Nginx configuration properties
+nginx_config_permissions:
+  files:
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  folders:
+    owner: 'root'
+    group: 'root'
+    mode: '0750'
+
+nginx_config_paths:
+  files:
+    main: '/etc/nginx/nginx.conf'
+    default:
+      - '/etc/nginx/conf.d/default.conf'
+      - '/etc/nginx/conf.d/example_ssl.conf'
+  folders:
+    sites_available: '/etc/nginx/sites-available'
+    sites_enabled: '/etc/nginx/sites-enabled'
+
+
+# Servers configuration management
+#------------------------------------------------------------------------------
+
+# Remove default servers configuration files
+nginx_delete_default_config_files: True
+
+# Add a default servers before servers includes
 nginx_add_default_server: True
 nginx_default_server_options:
   - 'return 404;'
-
-# Nginx configuration
-nginx_config_files_owner: 'root'
-nginx_config_files_group: 'root'
-nginx_config_files_mode: '0644'
-nginx_config_dir_owner: 'root'
-nginx_config_dir_group: 'root'
-nginx_config_dir_mode: '0750'
-nginx_delete_default_config_files: True
-nginx_default_config_files:
-  - '/etc/nginx/conf.d/default.conf'
-  - '/etc/nginx/conf.d/example_ssl.conf'
-nginx_main_config_file_path: '/etc/nginx/nginx.conf'
-nginx_sites_available_path: '/etc/nginx/sites-available'
-nginx_sites_enabled_path: '/etc/nginx/sites-enabled'
 
 
 nginx_user: 'nginx'
