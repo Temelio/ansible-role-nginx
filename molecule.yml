@@ -28,6 +28,11 @@ ansible:
             - 'localhost'
           additional_rules: []
           use_ssl: False
+      nginx_upstreams:
+        - name: 'foo'
+          is_enabled: True
+          options:
+            - 'server 127.0.0.1:8080;'
 dependency:
   name: 'galaxy'
 driver:

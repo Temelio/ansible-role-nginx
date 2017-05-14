@@ -45,7 +45,7 @@ $ MOLECULE_DRIVER=vagrant tox
 
 ### Default role variables
 
-``` yaml
+```yaml
 nginx_repository_cache_valid_time: 3600
 nginx_repository_key_url: "http://nginx.org/keys/nginx_signing.key"
 nginx_repository_url: "http://nginx.org/packages/{{ ansible_distribution | lower }}/"
@@ -111,7 +111,7 @@ nginx_servers: []
 Today, management of configuration options is smaller and incomplete, but will grow later.
 
 Example:
-``` yaml
+```yaml
 nginx_servers:
   - name: "{{ ansible_fqdn }}"
     is_enabled: False
@@ -132,13 +132,26 @@ nginx_servers:
     use_ssl: False
 ```
 
+## Configure upstreams
+
+Today, management of configuration options is smaller and incomplete, but will grow later.
+
+Example:
+```yaml
+nginx_upstreams:
+  - name: 'foo'
+    is_enabled: False
+    options:
+      - 'server 127.0.0.1:8080;'
+```
+
 ## Dependencies
 
 None
 
 ## Example Playbook
 
-``` yaml
+```yaml
 - hosts: servers
   roles:
     - { role: Temelio.nginx }

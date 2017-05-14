@@ -73,3 +73,4 @@ nginx_http_log_format_name: 'main'
 nginx_http_log_format_string: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'
 
 nginx_servers: []
+nginx_upstreams: []
