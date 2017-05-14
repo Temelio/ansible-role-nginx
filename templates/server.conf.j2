@@ -1,5 +1,15 @@
 # {{ ansible_managed }}
 
+{% if item.upstreams is defined %}
+{% for upstream_item in item.upstreams %}
+upstream {{ upstream_item.name }} {
+{% for upstream_option in upstream_item.options %}
+    {{ upstream_option }}
+{% endfor %}
+}
+{% endfor %}
+{% endif %}
+
 server {
 {% if item.listen is defined %}
 {% for listen_entry in item.listen %}
