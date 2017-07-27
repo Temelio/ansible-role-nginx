@@ -14,6 +14,11 @@ server {
     ssl_protocols {{ item.ssl.protocols | join(' ') }};
     ssl_ciphers {{ item.ssl.ciphers | join(':') }};
     ssl_prefer_server_ciphers {{ item.ssl.prefer_server_cipher }};
+{% if item.ssl.client_certificate is defined %}
+    ssl_client_certificate {{ item.ssl.client_certificate }}
+{% if item.ssl.verify_client is defined %}
+    ssl_verify_client {{ item.ssl.verify_client }}
+{% endif %}
 {% endif %}
 
 {% if item.root is defined and item.root != '' %}
