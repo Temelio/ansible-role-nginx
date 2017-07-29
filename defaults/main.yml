@@ -12,6 +12,7 @@ nginx_repositories_keys: "{{ _nginx_repositories_keys }}"
 nginx_repositories: "{{ _nginx_repositories }}"
 
 # Services management
+nginx_service_name: "{{ _nginx_service_name }}"
 nginx_service_state: 'started'
 nginx_service_enabled: True
 
@@ -43,34 +44,35 @@ nginx_config_paths:
 # Remove default servers configuration files
 nginx_delete_default_config_files: True
 
-# Add a default servers before servers includes
-nginx_add_default_server: True
-nginx_default_server_options:
-  - 'return 404;'
-
-
+# General
 nginx_user: 'nginx'
-nginx_error_log_path: '/var/log/nginx/error.log'
-nginx_error_log_level: 'warn'
-nginx_pid_path: '/run/nginx.pid'
 
-nginx_main_options:
-  - "user {{ nginx_user }};"
-  - 'worker_processes 1;'
-
-nginx_events_options:
-  - 'worker_connections 1024;'
-
-nginx_http_options:
-  - 'include /etc/nginx/mime.types;'
-  - 'default_type application/octet-stream;'
-  - 'access_log /var/log/nginx/access.log main;'
-  - 'sendfile on;'
-  - 'keepalive_timeout 65;'
-  - 'include /etc/nginx/conf.d/*.conf;'
-
-nginx_http_log_format_name: 'main'
-nginx_http_log_format_string: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'
+# Nginx main configuration
+nginx_conf:
+  root:
+    options: |
+      user {{ nginx_user }};
+      worker_processes 1;
+      error_log /var/log/nginx/error.log info;
+      pid /run/nginx.pid;
+  events:
+    options: |
+      worker_connections 1024;
+  http:
+    default_server:
+      enabled: True
+      content: |
+        return 404;
+    options: |
+      log_format main '$remote_addr - $remote_user [$time_local] "$request"
+        $status $body_bytes_sent "$http_referer" "$http_user_agent"
+        "$http_x_forwarded_for"';
+      include /etc/nginx/mime.types;
+      default_type application/octet-stream;
+      access_log /var/log/nginx/access.log main;
+      sendfile on;
+      keepalive_timeout 65;
+      include /etc/nginx/conf.d/*.conf;
 
 nginx_servers: []
 nginx_upstreams: []
