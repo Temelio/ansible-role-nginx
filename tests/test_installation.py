@@ -2,82 +2,93 @@
 Role tests
 """
 
+import pytest
 from testinfra.utils.ansible_runner import AnsibleRunner
 
 testinfra_hosts = AnsibleRunner('.molecule/ansible_inventory').get_hosts('all')
 
 
-def test_packages(host):
+@pytest.mark.parametrize('name,distributions', [
+    ('nginx', ['debian', 'ubuntu']),
+])
+def test_packages(host, name, distributions):
     """
     Test packages installation
     """
 
-    packages = []
-
-    if host.system_info.distribution in ('debian', 'ubuntu'):
-        packages = ['nginx']
-
-    for package in packages:
-        assert host.package(package).is_installed
+    if host.system_info.distribution in distributions:
+        assert host.package(name).is_installed
+    else:
+        pytest.skip('Test not work with this distribution')
 
 
-def test_repository_file(host):
+@pytest.mark.parametrize('file_path,distributions', [
+    ('/etc/apt/sources.list.d/nginx_org_packages_debian.list', ['debian']),
+    ('/etc/apt/sources.list.d/nginx_org_packages_ubuntu.list', ['ubuntu']),
+])
+def test_repository_file(host, file_path, distributions):
     """
     Test about repository file poroperties
     """
 
-    repo_file = ''
-
-    if host.system_info.distribution == 'debian':
-        repo_file = '/etc/apt/sources.list.d/nginx_org_packages_debian.list'
-    elif host.system_info.distribution == 'ubuntu':
-        repo_file = '/etc/apt/sources.list.d/nginx_org_packages_ubuntu.list'
-
-    assert host.file(repo_file).exists
-    assert host.file(repo_file).is_file
-    assert host.file(repo_file).user == 'root'
-    assert host.file(repo_file).group == 'root'
-    assert host.file(repo_file).mode == 0o644
+    if host.system_info.distribution in distributions:
+        repo_file = host.file(file_path)
+        assert repo_file.exists
+        assert repo_file.is_file
+        assert repo_file.user == 'root'
+        assert repo_file.group == 'root'
+        assert repo_file.mode == 0o644
+    else:
+        pytest.skip('Test not work with this distribution')
 
 
-def test_default_files_removed(host):
+@pytest.mark.parametrize('file_path,distributions', [
+    ('/etc/nginx/conf.d/default.conf', ['debian', 'ubuntu']),
+    ('/etc/nginx/conf.d/example_ssl.conf', ['debian', 'ubuntu']),
+])
+def test_default_files_removed(host, file_path, distributions):
     """
-    Test about default files deletion
+    Test default files are removed
     """
 
-    default_files = []
-
-    if host.system_info.distribution in ('debian', 'ubuntu'):
-        default_files = [
-            '/etc/nginx/conf.d/default.conf',
-            '/etc/nginx/conf.d/example_ssl.conf',
-        ]
-
-    for default_file in default_files:
-        assert host.file(default_file).exists is False
+    if host.system_info.distribution in distributions:
+        assert host.file(file_path).exists is False
+    else:
+        pytest.skip('Test not work with this distribution')
 
 
-def test_service(host):
+@pytest.mark.parametrize('name,distributions', [
+    ('nginx', ['debian', 'ubuntu']),
+])
+def test_service(host, name, distributions):
     """
     Test about service
     """
 
-    service_name = 'nginx'
+    if host.system_info.distribution in distributions:
+        nginx_service = host.service(name)
+        assert nginx_service.is_enabled
 
-    assert host.service(service_name).is_enabled
+        # Systemctl not available with Docker images
+        if 'docker' != host.backend.NAME:
+            assert nginx_service.is_running
+    else:
+        pytest.skip('Test not work with this distribution')
 
-    # Systemctl not available with Docker images
-    if 'docker' != host.backend.NAME:
-        assert host.service(service_name).is_running
 
-
-def test_system_user(host):
+@pytest.mark.parametrize('name,group,home,shell,distributions', [
+    ('nginx', 'nginx', '/nonexistent', '/bin/false', ['debian', 'ubuntu']),
+])
+def test_system_user(host, name, group, home, shell, distributions):
     """
     Check if system user exists
     """
 
-    if host.system_info.distribution in ('debian', 'ubuntu'):
-        assert host.user('nginx').exists
-        assert host.user('nginx').group == 'nginx'
-        assert host.user('nginx').home == '/nonexistent'
-        assert host.user('nginx').shell == '/bin/false'
+    if host.system_info.distribution in distributions:
+        nginx_user = host.user(name)
+        assert nginx_user.exists
+        assert nginx_user.group == group
+        assert nginx_user.home == home
+        assert nginx_user.shell == shell
+    else:
+        pytest.skip('Test not work with this distribution')
