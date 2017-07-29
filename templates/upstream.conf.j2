@@ -1,7 +1,5 @@
-# {{ ansible_managed }}
+# {{ ansible_managed }}
 
 upstream {{ item.name }} {
-{% for upstream_option in item.options %}
-    {{ upstream_option }}
-{% endfor %}
+    {{ item.options | indent(4, False) }}
 }

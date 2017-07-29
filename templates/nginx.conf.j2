@@ -1,43 +1,19 @@
 # {{ ansible_managed }}
 
-
-{% if nginx_main_options is defined %}
-{% for main_option in nginx_main_options %}
-{{ main_option }}
-{% endfor %}
-{% endif %}
-
-error_log {{ nginx_error_log_path }} {{ nginx_error_log_level }};
-pid {{ nginx_pid_path }};
+{{ nginx_conf.root.options }}
 
 events {
-{% if nginx_events_options is defined %}
-{% for event_option in nginx_events_options %}
-    {{ event_option }}
-{% endfor %}
-{% endif %}
+    {{ nginx_conf.events.options | indent(4, False) }}
 }
 
 http {
-{% if nginx_http_log_format_string %}
-    log_format {{ nginx_http_log_format_name }} '{{ nginx_http_log_format_string }}';
-{% endif %}
-{% if nginx_http_options is defined %}
-{% for http_option in nginx_http_options %}
-    {{ http_option }}
-{% endfor %}
-{% endif %}
+    {{ nginx_conf.http.options | indent(4, False) }}
 
-{% if nginx_add_default_server %}
+    {% if nginx_conf.http.default_server.enabled -%}
     server {
-{% if nginx_default_server_options is defined %}
-{% for server_option in nginx_default_server_options %}
-        {{ server_option }}
-{% endfor %}
-{% endif %}
+        {{ nginx_conf.http.default_server.content | indent(8, False) }}
     }
-{% endif %}
+
+    {% endif -%}
     include {{ nginx_config_paths.folders.sites_enabled }}/*.conf;
-
 }
-
