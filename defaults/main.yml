@@ -12,6 +12,7 @@ nginx_repositories_keys: "{{ _nginx_repositories_keys }}"
 nginx_repositories: "{{ _nginx_repositories }}"
 
 # Services management
+nginx_service_name: "{{ _nginx_service_name }}"
 nginx_service_state: 'started'
 nginx_service_enabled: True
 

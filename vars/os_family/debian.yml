@@ -17,4 +17,4 @@ _nginx_packages:
     state: 'latest'
 
 # Services
-nginx_service_name: 'nginx'
+_nginx_service_name: 'nginx'
