@@ -46,64 +46,80 @@ $ MOLECULE_DRIVER=vagrant tox
 ### Default role variables
 
 ```yaml
-nginx_repository_cache_valid_time: 3600
-nginx_repository_key_url: "http://nginx.org/keys/nginx_signing.key"
-nginx_repository_url: "http://nginx.org/packages/{{ ansible_distribution | lower }}/"
-nginx_repository_file:
-  name: 'nginx.list'
-  owner: 'root'
-  group: 'root'
-  mode: '0644'
+# General
+#------------------------------------------------------------------------------
 
-nginx_packages_state: 'latest'
+# Packages and repositories management
+nginx_packages: "{{ _nginx_packages }}"
+nginx_repository_cache_valid_time: "{{ _nginx_repository_cache_valid_time }}"
+nginx_repositories_keys: "{{ _nginx_repositories_keys }}"
+nginx_repositories: "{{ _nginx_repositories }}"
 
+# Services management
+nginx_service_name: "{{ _nginx_service_name }}"
 nginx_service_state: 'started'
 nginx_service_enabled: True
 
-nginx_add_default_server: True
-nginx_default_server_options:
-  - 'return 404;'
+# Nginx configuration properties
+nginx_config_permissions:
+  files:
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  folders:
+    owner: 'root'
+    group: 'root'
+    mode: '0750'
 
-# Nginx configuration
-nginx_config_files_owner: 'root'
-nginx_config_files_group: 'root'
-nginx_config_files_mode: '0644'
-nginx_config_dir_owner: 'root'
-nginx_config_dir_group: 'root'
-nginx_config_dir_mode: '0750'
+nginx_config_paths:
+  files:
+    main: '/etc/nginx/nginx.conf'
+    default:
+      - '/etc/nginx/conf.d/default.conf'
+      - '/etc/nginx/conf.d/example_ssl.conf'
+  folders:
+    sites_available: '/etc/nginx/sites-available'
+    sites_enabled: '/etc/nginx/sites-enabled'
+
+
+# Servers configuration management
+#------------------------------------------------------------------------------
+
+# Remove default servers configuration files
 nginx_delete_default_config_files: True
-nginx_default_config_files:
-  - '/etc/nginx/conf.d/default.conf'
-  - '/etc/nginx/conf.d/example_ssl.conf'
-nginx_main_config_file_path: '/etc/nginx/nginx.conf'
-nginx_sites_available_path: '/etc/nginx/sites-available'
-nginx_sites_enabled_path: '/etc/nginx/sites-enabled'
 
+# General
 nginx_user: 'nginx'
-nginx_error_log_path: '/var/log/nginx/error.log'
-nginx_error_log_level: 'warn'
-nginx_pid_path: '/run/nginx.pid'
 
-nginx_main_options:
-  - "user {{ nginx_user }};"
-  - 'worker_processes 1;'
-
-nginx_events_options:
-  - 'worker_connections 1024;'
-
-nginx_http_options:
-  - 'include /etc/nginx/mime.types;'
-  - 'default_type application/octet-stream;'
-  - 'access_log /var/log/nginx/access.log main;'
-  - 'sendfile on;'
-  - 'keepalive_timeout 65;'
-  - 'include /etc/nginx/conf.d/*.conf;'
-
-nginx_http_log_format_name: 'main'
-nginx_http_log_format_string: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'
+# Nginx main configuration
+nginx_conf:
+  root:
+    options: |
+      user {{ nginx_user }};
+      worker_processes 1;
+      error_log /var/log/nginx/error.log info;
+      pid /run/nginx.pid;
+  events:
+    options: |
+      worker_connections 1024;
+  http:
+    default_server:
+      enabled: True
+      content: |
+        return 404;
+    options: |
+      log_format main '$remote_addr - $remote_user [$time_local] "$request"
+        $status $body_bytes_sent "$http_referer" "$http_user_agent"
+        "$http_x_forwarded_for"';
+      include /etc/nginx/mime.types;
+      default_type application/octet-stream;
+      access_log /var/log/nginx/access.log main;
+      sendfile on;
+      keepalive_timeout 65;
+      include /etc/nginx/conf.d/*.conf;
 
 nginx_servers: []
-
+nginx_upstreams: []
 ```
 
 ## Configure servers
@@ -115,21 +131,19 @@ Example:
 nginx_servers:
   - name: "{{ ansible_fqdn }}"
     is_enabled: False
-    listen:
-      - 80
+    options: |
+      listen: 80;
+      root /var/www/foo;
+      server_name localhost;
     locations:
       - target: '/foo'
-        options:
-          - 'try_files $uri =404'
-          - 'root /var/www/foo'
+        options: |
+          try_files $uri =404;
+          root /var/www/foo;
       - target: '/bar'
-        options:
-          - 'try_files $uri =404'
-          - 'root /var/www/bar'
-    root: '/var/www/foo'
-    server_name:
-      - 'localhost'
-    use_ssl: False
+        options: |
+          try_files $uri =404;
+          root /var/www/bar;
 ```
 
 ## Configure upstreams
@@ -141,8 +155,8 @@ Example:
 nginx_upstreams:
   - name: 'foo'
     is_enabled: False
-    options:
-      - 'server 127.0.0.1:8080;'
+    options: |
+      server 127.0.0.1:8080;
 ```
 
 ## Dependencies
