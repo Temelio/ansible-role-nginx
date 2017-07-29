@@ -7,7 +7,6 @@ ansible:
     ANSIBLE_NOCOWS: 1
   group_vars:
     all:
-      nginx_ssl_self_signed_cn: "foobar.bar"
       nginx_servers:
         - name: 'foobar'
           is_enabled: True
