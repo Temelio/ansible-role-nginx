@@ -6,7 +6,9 @@
   include: "{{ role_path }}/tasks/manage_variables.yml"
   tags:
     - 'role::nginx'
+    - 'role::nginx::config'
     - 'role::nginx::init'
+    - 'role::nginx::install'
 
 
 - name: 'INSTALL | Manage OS family specific installation tasks'
