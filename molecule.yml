@@ -24,6 +24,13 @@ ansible:
               options: |
                 try_files $uri =404;
                 root /var/www/bar;
+        - name: 'bar'
+          is_enabled: True
+          options: |
+            listen 80;
+            root /var/www/foo;
+            server_name localhost;
+            index index.html;
       nginx_upstreams:
         - name: 'foo'
           is_enabled: True

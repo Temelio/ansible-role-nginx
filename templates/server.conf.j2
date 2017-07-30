@@ -4,7 +4,7 @@ server {
 
     {{ item.options | indent(4, False) }}
 
-{% for location in item.locations %}
+{% for location in item.locations | default([]) %}
     location {{ location.target }} {
         {{ location.options | indent(8, False) }}
     }
