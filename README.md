@@ -159,6 +159,19 @@ nginx_upstreams:
       server 127.0.0.1:8080;
 ```
 
+## Configure maps
+
+
+Example:
+```yaml
+nginx_maps:
+  - name: 'foo'
+    is_enabled: False
+    target: '$uri $new_uri'
+    options: |
+      /foo /bar;
+```
+
 ## Dependencies
 
 None
