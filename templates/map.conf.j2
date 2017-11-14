@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+map {{ item.target }} {
+    {{ item.options | indent(4, False) }}
+}

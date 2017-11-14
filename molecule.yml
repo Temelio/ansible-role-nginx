@@ -36,6 +36,12 @@ ansible:
           is_enabled: True
           options: |
             server 127.0.0.1:8080;
+      nginx_maps:
+        - name: 'foo'
+          is_enabled: True
+          target: '$uri $new_uri'
+          options: |
+            /foo /bar;
 dependency:
   name: 'galaxy'
 driver:

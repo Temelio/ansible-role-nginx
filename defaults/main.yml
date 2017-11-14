@@ -74,5 +74,6 @@ nginx_conf:
       keepalive_timeout 65;
       include /etc/nginx/conf.d/*.conf;
 
+nginx_maps: []
 nginx_servers: []
 nginx_upstreams: []
