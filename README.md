@@ -1,8 +1,12 @@
 # nginx
 
-[![Build Status](https://travis-ci.org/Temelio/ansible-role-nginx.svg?branch=master)](https://travis-ci.org/Temelio/ansible-role-nginx)
+[![Build Status](https://img.shields.io/travis/Temelio/ansible-role-nginx/master.svg?label=travis_master)](https://travis-ci.org/Temelio/ansible-role-nginx)
+[![Build Status](https://img.shields.io/travis/Temelio/ansible-role-nginx/develop.svg?label=travis_develop)](https://travis-ci.org/Temelio/ansible-role-nginx)
+[![Updates](https://pyup.io/repos/github/Temelio/ansible-role-nginx/shield.svg)](https://pyup.io/repos/github/Temelio/ansible-role-nginx/)
+[![Python 3](https://pyup.io/repos/github/Temelio/ansible-role-nginx/python-3-shield.svg)](https://pyup.io/repos/github/Temelio/ansible-role-nginx/)
+[![Ansible Role](https://img.shields.io/ansible/role/8026.svg)](https://galaxy.ansible.com/Temelio/nginx/)
 
-Install nginx package.
+Install anc configure Nginx package.
 
 ## Requirements
 
