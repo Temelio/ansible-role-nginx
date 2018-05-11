@@ -31,66 +31,6 @@
   notify: 'HANDLER | Restart Nginx'
 
 
-- name: 'Manage servers configuration'
-  template:
-    src: "{{ role_path }}/templates/server.conf.j2"
-    dest: "{{ nginx_config_paths.folders.sites_available }}/{{ item.name }}.conf"
-    owner: "{{ nginx_config_permissions.files.owner }}"
-    group: "{{ nginx_config_permissions.files.group }}"
-    mode: "{{ nginx_config_permissions.files.mode }}"
+- name: 'Manage items configuration'
+  include: "{{ role_path }}/tasks/configure_items.yml"
   notify: 'HANDLER | Restart Nginx'
-  with_items: "{{ nginx_servers }}"
-
-
-- name: 'Manage servers activation'
-  file:
-    src: "{{ nginx_config_paths.folders.sites_available }}/{{ item.name }}.conf"
-    dest: "{{ nginx_config_paths.folders.sites_enabled }}/{{ item.name }}.conf"
-    state: "{{ item.is_enabled | ternary('link', 'absent') }}"
-  notify: 'HANDLER | Restart Nginx'
-  with_items: "{{ nginx_servers }}"
-
-
-- name: 'Manage upstreams configuration'
-  template:
-    src: "{{ role_path }}/templates/upstream.conf.j2"
-    dest: "{{ nginx_config_paths.folders.sites_available }}/upstream-{{ item.name }}.conf"
-    owner: "{{ nginx_config_permissions.files.owner }}"
-    group: "{{ nginx_config_permissions.files.group }}"
-    mode: "{{ nginx_config_permissions.files.mode }}"
-  notify: 'HANDLER | Restart Nginx'
-  with_items: "{{ nginx_upstreams }}"
-
-
-- name: 'Manage upstreams activation'
-  file:
-    src: "{{ nginx_config_paths.folders.sites_available }}/upstream-{{ item.name }}.conf"
-    dest: "{{ nginx_config_paths.folders.sites_enabled }}/upstream-{{ item.name }}.conf"
-    state: "{{ item.is_enabled | ternary('link', 'absent') }}"
-  notify: 'HANDLER | Restart Nginx'
-  with_items: "{{ nginx_upstreams }}"
-
-
-- name: 'Manage maps configuration'
-  template:
-    src: "{{ role_path }}/templates/map.conf.j2"
-    dest: "{{ nginx_config_paths.folders.sites_available }}/map-{{ item.name }}.conf"
-    owner: "{{ nginx_config_permissions.files.owner }}"
-    group: "{{ nginx_config_permissions.files.group }}"
-    mode: "{{ nginx_config_permissions.files.mode }}"
-  notify: 'HANDLER | Restart Nginx'
-  with_items: "{{ nginx_maps }}"
-
-
-- name: 'Manage maps activation'
-  file:
-    src: "{{ nginx_config_paths.folders.sites_available }}/map-{{ item.name }}.conf"
-    dest: "{{ nginx_config_paths.folders.sites_enabled }}/map-{{ item.name }}.conf"
-    state: "{{ item.is_enabled | ternary('link', 'absent') }}"
-  notify: 'HANDLER | Restart Nginx'
-  with_items: "{{ nginx_maps }}"
-
-
-- name: 'Check if configuration is valid'
-  command: 'nginx -t'
-  changed_when: False
