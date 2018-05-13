@@ -3,7 +3,7 @@
 # Defaults vars file for nginx role
 
 # General
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # Packages and repositories management
 nginx_packages: "{{ _nginx_packages }}"
@@ -39,7 +39,7 @@ nginx_config_paths:
 
 
 # Servers configuration management
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # Remove default servers configuration files
 nginx_delete_default_config_files: True
