@@ -3,7 +3,7 @@
 # Main tasks file for nginx role
 
 - name: 'INIT | Manage variables to use for our target'
-  include: "{{ role_path }}/tasks/manage_variables.yml"
+  include_tasks: "{{ role_path }}/tasks/manage_variables.yml"
   tags:
     - 'role::nginx'
     - 'role::nginx::config'
@@ -13,7 +13,7 @@
 
 - name: 'INSTALL | Manage OS family specific installation tasks'
   become: True
-  include: "{{ role_path }}/tasks/install/{{ ansible_os_family | lower }}_family.yml"
+  include_tasks: "{{ role_path }}/tasks/install/{{ ansible_os_family | lower }}_family.yml"
   tags:
     - 'role::nginx'
     - 'role::nginx::install'
@@ -21,7 +21,7 @@
 
 - name: 'CONFIG | Manage configuration'
   become: True
-  include: "{{ role_path }}/tasks/configure.yml"
+  include_tasks: "{{ role_path }}/tasks/configure.yml"
   tags:
     - 'role::nginx'
     - 'role::nginx::config'

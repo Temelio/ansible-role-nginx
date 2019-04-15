@@ -1,0 +1,4 @@
+---
+# specific vars for stretch release
+gpg_packages:
+  - name: 'gnupg'

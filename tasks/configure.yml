@@ -32,5 +32,5 @@
 
 
 - name: 'Manage items configuration'
-  include: "{{ role_path }}/tasks/configure_items.yml"
+  include_tasks: "{{ role_path }}/tasks/configure_items.yml"
   notify: 'HANDLER | Restart Nginx'

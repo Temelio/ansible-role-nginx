@@ -2,15 +2,17 @@
 
 [![Build Status](https://img.shields.io/travis/Temelio/ansible-role-nginx/master.svg?label=travis_master)](https://travis-ci.org/Temelio/ansible-role-nginx)
 [![Build Status](https://img.shields.io/travis/Temelio/ansible-role-nginx/develop.svg?label=travis_develop)](https://travis-ci.org/Temelio/ansible-role-nginx)
+[![License](https://img.shields.io/badge/license-MIT%20License-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![Updates](https://pyup.io/repos/github/Temelio/ansible-role-nginx/shield.svg)](https://pyup.io/repos/github/Temelio/ansible-role-nginx/)
 [![Python 3](https://pyup.io/repos/github/Temelio/ansible-role-nginx/python-3-shield.svg)](https://pyup.io/repos/github/Temelio/ansible-role-nginx/)
 [![Ansible Role](https://img.shields.io/ansible/role/8026.svg)](https://galaxy.ansible.com/Temelio/nginx/)
+[![GitHub tag](https://img.shields.io/github/tag/temelio/ansible-role-nginx.svg)](https://github.com/Temelio/ansible-role-nginx/tags)
 
 Install anc configure Nginx package.
 
 ## Requirements
 
-This role requires Ansible 2.2 or higher,
+This role requires Ansible 2.4 or higher,
 and platform requirements are listed in the metadata file.
 
 ## Testing
@@ -21,14 +23,16 @@ Local and Travis tests run tests on Docker by default.
 See molecule documentation to use other backend.
 
 Currently, tests are done on:
-- Debian Jessie
+- Debian Stretch
 - Ubuntu Trusty
 - Ubuntu Xenial
+- Ubuntu Bionic
 
 and use:
-- Ansible 2.2.x
-- Ansible 2.3.x
 - Ansible 2.4.x
+- Ansible 2.5.x
+- Ansible 2.6.x
+- Ansible 2.7.x
 
 ### Running tests
 
@@ -187,6 +191,5 @@ MIT
 
 ## Author Information
 
-Alexandre Chaussier (for Temelio company)
+A Chaussier, L Machetel (for Temelio company)
 - http://www.temelio.com
-- alexandre.chaussier [at] temelio.com
