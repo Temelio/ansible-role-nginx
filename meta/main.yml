@@ -1,20 +1,21 @@
 ---
 
 galaxy_info:
-  author: 'Alexandre Chaussier'
+  author: 'A Chaussier, L Machetel'
   description: 'Ansible role to deploy and configure Nginx'
-  company: 'Temelio (http://www.temelio.com)'
+  company: 'Temelio (https://www.temelio.com)'
   license: 'MIT'
-  min_ansible_version: '2.2'
+  min_ansible_version: '2.4'
   github_branch: 'master'
   platforms:
     - name: 'Debian'
       versions:
-        - 'jessie'
+        - 'stretch'
     - name: 'Ubuntu'
       versions:
         - 'trusty'
         - 'xenial'
+        - 'bionic'
   galaxy_tags:
     - 'web'
     - 'system'

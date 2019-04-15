@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+{{ ansible_managed | comment }}
 
 upstream {{ item.name }} {
     {{ item.options | indent(4, False) }}

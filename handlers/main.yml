@@ -5,12 +5,12 @@
 - name: 'HANDLER | Restart Nginx'
   become: True
   service:
-    name: "{{ nginx_service_name }}"
+    name: "{{ nginx_service_name }}"
     state: 'restarted'
 
 
 - name: 'HANDLER | Reload Nginx'
   become: True
   service:
-    name: "{{ nginx_service_name }}"
+    name: "{{ nginx_service_name }}"
     state: 'reloaded'

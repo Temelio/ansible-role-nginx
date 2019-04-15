@@ -1,0 +1,5 @@
+---
+
+# specific vars for bionic release
+gpg_packages:
+  - name: 'gpg'

@@ -1,4 +1,11 @@
 ---
+ansible:
+  extra_vars:
+    ansible_python_interpreter: '/usr/bin/env python2.7'
+    no_log: true
+  raw_env_vars:
+    ANSIBLE_NOCOWS: 1
+
 
 dependency:
   name: 'galaxy'
@@ -7,8 +14,8 @@ driver:
 lint:
   name: 'yamllint'
 platforms:
-  - name: "nginx-docker-jessie"
-    image: 'minimum2scp/systemd-jessie:latest'
+  - name: "nginx-docker-stretch"
+    image: 'minimum2scp/systemd-stretch:latest'
     command: '/sbin/init'
     cap_add:
       - 'SYS_PTRACE'
@@ -21,6 +28,12 @@ platforms:
     privileged: True
   - name: "nginx-docker-trusty"
     image: 'ubuntu:trusty'
+    cap_add:
+      - 'SYS_PTRACE'
+    privileged: True
+  - name: "nginx-docker-bionic"
+    image: 'solita/ubuntu-systemd:18.04'
+    command: '/sbin/init'
     cap_add:
       - 'SYS_PTRACE'
     privileged: True

@@ -2,6 +2,15 @@
 
 # Specific install tasks for Debian family
 
+- name: 'Install prerequisites'
+  apt:
+    name: "{{ item.name }}"
+    state: 'present'
+    update_cache: True
+  when: (ansible_distribution_release | lower == 'bionic') or (ansible_distribution_release | lower == 'stretch')
+  with_items: "{{ gpg_packages }}"
+
+
 - name: 'INSTALL | APT | Manage repository key'
   apt_key:
     url: "{{ item.url }}"
