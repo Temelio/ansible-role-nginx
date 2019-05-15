@@ -1,6 +1,6 @@
 ---
 
-- name: 'Delete default configuration files'
+- name: 'CONFIGURE | Delete default configuration files'
   file:
     path: "{{ item }}"
     state: 'absent'
@@ -9,7 +9,7 @@
   when: "nginx_delete_default_config_files"
 
 
-- name: 'Create server configuration folders'
+- name: 'CONFIGURE | Create server configuration folders'
   file:
     path: "{{ item }}"
     owner: "{{ nginx_config_permissions.folders.owner }}"
@@ -21,7 +21,7 @@
     - "{{ nginx_config_paths.folders.sites_enabled }}"
 
 
-- name: 'Manage main configuration file'
+- name: 'CONFIGURE | Manage main configuration file'
   template:
     src: "{{ role_path }}/templates/nginx.conf.j2"
     dest: "{{ nginx_config_paths.files.main }}"
@@ -31,6 +31,17 @@
   notify: 'HANDLER | Restart Nginx'
 
 
-- name: 'Manage items configuration'
+- name: 'CONFIGURE | Manage items configuration'
   include_tasks: "{{ role_path }}/tasks/configure_items.yml"
   notify: 'HANDLER | Restart Nginx'
+
+
+- name: 'CONFIGURE | manage logorotate'
+  template:
+    src: "{{ role_path }}/templates/logrotate.j2"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default (0644) }}"
+  with_items: "{{ nginx_logrotate_config }}"
+  when: default_nginx_logrotate_config_modify
