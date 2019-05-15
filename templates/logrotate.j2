@@ -1,0 +1,21 @@
+{{ ansible_managed | comment }}
+
+# Logrotate configuration
+#==============================================================================
+
+# Nginx log
+{{ nginx_log_path }}/*.log" {
+    {{ nginx_logrotate_daily | default('daily') }}
+    {{ nginx_logrotate_missing | default('missingok') }}
+    {{ nginx_logrotate_rotate | default(' 54') }}
+    {{ nginx_logrotate_compress | default('compress') }}
+    {{ nginx_logrotate_delaycompress | default('delaycompress') }}
+    {{ nginx_logrotate_notify | default('notifempty') }}
+    {{ nginx_logrotate_create | default('create 640 nginx adm') }}
+    {{ nginx_logrotate_sharedscripts | default('sharedscripts') }}
+    postrotate
+        if [ -f /var/run/nginx.pid ]; then
+            kill -USR1 `cat /var/run/nginx.pid`
+        fi
+    endscript
+}

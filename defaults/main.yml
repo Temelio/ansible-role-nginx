@@ -77,3 +77,9 @@ nginx_conf:
 nginx_maps: []
 nginx_servers: []
 nginx_upstreams: []
+
+nginx_log_path: '/var/log/nginx'
+default_nginx_logrotate_config_modify: True
+nginx_logrotate_config:
+  - dest: '/etc/logrotate.d/nginx'
+nginx_logrotate_rotate: '54'
